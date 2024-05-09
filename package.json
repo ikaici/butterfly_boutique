@@ -1,0 +1,22 @@
+{
+  "name": "cmsc335finalproject",
+  "version": "1.0.0",
+  "description": "Shopping Website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikaici/cmsc335finalproject.git"
+  },
+  "author": "Lilika and Defne",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ikaici/cmsc335finalproject/issues"
+  },
+  "homepage": "https://github.com/ikaici/cmsc335finalproject#readme",
+  "dependencies": {
+    "node": "^20.13.0"
+  }
+}
