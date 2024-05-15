@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ikaici/cmsc335finalproject#readme",
   "dependencies": {
+    "mongodb": "^6.6.1",
     "node": "^20.13.0"
   }
 }
