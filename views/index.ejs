@@ -5,14 +5,24 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Terrapin Botique</title>
+
+	<link rel="stylesheet" href="style.css"/>
+
+	<!-- External Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com"/>
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
 </head>
 
 <body>
-	<h1>Welcome to our clothing store!!!</h1>
+	<div class="margin">
+	<h1 class="now">Welcome to our clothing store!!!</h1>
 
-	To search through our clothing catalogue, select: <a href="/catalog">Catalog</a><br><br>
-	To place an order, select:<a href="/order">Place Order</a><br>
-	<hr>
+	<p class="now">To search through our clothing catalogue, select: <a href="/catalog">Catalog</a><br><br>
+	To place an order, select:<a href="/order">Place Order</a><br></p>
+	<p>temperature: <%- weatherData.temperature %></p>
+	<p>description: <%- weatherData.description %></p>
+</div>
 </body>
 
 </html>

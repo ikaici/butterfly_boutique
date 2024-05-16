@@ -1,0 +1,62 @@
+/* Define all variables here! */
+:root {
+    --textbox-gradient: linear-gradient(#513090,#4e0070);
+    --my-size: .5rem;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+    /* Background properties */
+    background-color: #D5CAEB;
+    background-image: url(bgtile.png);
+    background-size:20%;
+
+    font-family: "Manrope", sans-serif;
+
+    /* Sample shorthand background property */
+    /* background: silver url(campusBldg.jpg) repeat-x fixed center; */
+
+    /* Next description includes image from the internet */
+    /* background-image: url(https://background-tiles.com/overview/white/patterns/large/1029.png); */
+}
+
+.margin {
+  margin-left: 20px;
+}
+
+.content-item{
+    background: var(--textbox-gradient);
+    padding: 22px 30px;
+    width: calc(50% - 15px);
+    box-shadow: -8px 8px 0 0 #2b0e43;
+  }
+
+.now{
+    width: calc(100% - 60px);
+    max-width: 855px;
+    background: linear-gradient(135deg, #4f1a81, #a947a2);
+    background: #4d1b7c;
+    color: #ffffff;
+    padding: 30px;
+    border: 7px solid #8263cf;
+    /* box-shadow: -8px 8px 0 0 #a783ff;*/
+  }
+
+  a {
+    color: #D5CAEB; /* light purple */
+    text-decoration: none; /* remove underline */
+  }
+  
+  /* Hover effect */
+  a:hover {
+    color: #ff69b4; /* pink */
+  }
+  
+  /* Visited link style */
+  a:visited {
+    color: #6a8dad; /* light blue */
+  }

@@ -9,20 +9,42 @@ const uri = process.env.MONGO_CONNECTION_STRING;
 const databaseAndCollection = { db: "CMSC335_DB", collection: "campApplicants" };
 
 app.set('view engine', 'ejs');
-app.use(express.static('public'));  
+app.use(express.static('views'));  
 app.use(express.urlencoded({ extended: true }));
 
 // Initialize
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
 
 async function connectToDatabase() {
         await client.connect();
         return client.db(databaseAndCollection.db);
 }
 
-// Home Page
+const apiKey = '8d060132a2642887fdc57261ed4248f7';
+const city = 'College Park'; // Example city name
+
+app.set('view engine', 'ejs');
+
 app.get('/', (req, res) => {
-    res.render('index'); 
+  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`)
+    .then(response => response.json())
+    .then(data => {
+        
+      const weatherData = {
+        temperature: data.main.temp,
+        description: data.weather[0].description
+      };
+      console.log(weatherData);
+      res.render('index', { weatherData });
+    })
+    .catch(error => {
+      console.error('Error fetching weather data:', error);
+      res.render('index', { error: 'Failed to fetch weather data' });
+    });
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });
 
 // Catalog Page 
