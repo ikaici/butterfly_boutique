@@ -5,11 +5,12 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Order Confirmation</title>
+	<link rel="stylesheet" href="style.css"/>
 </head>
 
 <body>
-	<h1>Order Confirmation</h1>
-	<div>
+	<h1 class="content, now">Order Confirmation</h1>
+	<div class="content, now">
 		<strong>Name: </strong><%- name %><br>
 		<strong>Email Address: </strong><%- email %><br>
 		<strong>Delivery Method: </strong><%- delivery %><br>
@@ -17,6 +18,8 @@
 		<%- orderTable %>
 		<br>
 		<em>Thank you for your order!!!</em>
+		<br><br>
+		<a href="http://localhost:3000" class="button">Return to home</a>
 	</div>
 </body>
 

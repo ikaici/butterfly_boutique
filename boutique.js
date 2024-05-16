@@ -85,11 +85,26 @@ try {
 }
 
 app.get('/catalog', (req, res) => {
-    let itemsTable = itemsMap.map(item => 
-        `<tr><td style="border: 2px double black;">${item.getName()}</td>` +
-        `<td style="border: 2px double black;">${item.getCost()}</td></tr>`
-    ).join('');
-    res.render('displayItems.ejs', { itemsTable: `<table>${itemsTable}</table>` });
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`)
+    .then(response => response.json())
+    .then(data => {
+      const weatherData = {
+        temperature: data.main.temp,
+        description: data.weather[0].description
+      };
+      console.log(weatherData);
+      let itemsTable = '<tr><th style="border: 2px double white;">Item</th><th style="border: 2px double white;">Price (USD $)</th></tr>';
+        itemsTable += itemsMap.map(item => 
+        `<tr><td style="border: 2px double white;">${item.getName()}</td>` +
+        `<td style="border: 2px double white;">${item.getCost()}</td></tr>`
+        ).join('');
+        res.render('displayItems.ejs', { itemsTable: `<table>${itemsTable}</table>`, weatherData });
+    })
+    .catch(error => {
+      console.error('Error fetching weather data:', error);
+      res.render('index', { error: 'Failed to fetch weather data' });
+    });
+    
 });
 
 app.get('/order', (req, res) => {
@@ -104,19 +119,19 @@ app.post('/order', async (req, res) => {
         itemsSelected = [itemsSelected];
     }
     let totalCost = 0;
-    let orderTable = '<table><tr><th style="border: 2px double black;">Item</th><th style="border: 2px double black;">Cost</th></tr>';
+    let orderTable = '<table><tr><th style="border: 2px double white;">Item</th><th style="border: 2px double white;">Cost</th></tr>';
     const itemsDetails = [];
 
     itemsSelected.forEach(itemName => {
         let item = itemsMap.find(it => it.name === itemName);
         if (item) {
             totalCost += item.getCost();
-            orderTable += `<tr><td style="border: 2px double black;">${itemName}</td><td style="border: 2px double black;">$${item.getCost().toFixed(2)}</td></tr>`;
+            orderTable += `<tr><td style="border: 2px double white;">${itemName}</td><td style="border: 2px double white;">$${item.getCost().toFixed(2)}</td></tr>`;
             itemsDetails.push({itemName, cost: item.getCost()});
         }
     });
 
-    orderTable += `<tr><td style="border: 2px double black;"><strong>Total Cost:</strong></td><td style="border: 2px double black;">$${totalCost.toFixed(2)}</td></tr></table>`;
+    orderTable += `<tr><td style="border: 2px double white;"><strong>Total Cost:</strong></td><td style="border: 2px double white;">$${totalCost.toFixed(2)}</td></tr></table>`;
 
     const orderData = {
         name,

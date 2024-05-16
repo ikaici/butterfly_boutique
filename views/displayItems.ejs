@@ -5,13 +5,56 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Order Confirmation</title>
+
+	<link rel="stylesheet" href="style.css"/>
 </head>
 
 <body>
-	<h1>Items Available</h1>
-	<div>
+
+	<h1 class="content, now">Items Available</h1>
+
+	<div class="content, now">
+		Items and their respective prices:
 		<%- itemsTable %>
+
+		<h4>Before making a purchase, you may want to consider the current weather conditions in College Park! </h4>
+		<p>Temperature: <%- weatherData.temperature %> F</p>
+		<p>Weather: <%- weatherData.description %></p>
 	</div>
+	<div class="content">
+		<div class="now">
+		  <h2>Catalog</h2>
+		  <p>Scroll horizontally in the section below to see the types of clothing we have available!
+		  </p>
+		  <div class="makeshift-carousel">
+			  <figure>
+				  <img src="tshirt.jpg" width="300" height="300" alt="T-shirt">
+				  <figcaption>T-Shirt</figcaption>
+			  </figure>
+			  <figure>
+				  <img src="jeans.jpg" width="300" height="300" alt="Denim Jeans">
+				  <figcaption>Denim Jeans</figcaption>
+			  </figure>
+			  <figure>
+				  <img src="croptop.jpg" width="300" height="300" alt="Crop Top">
+				  <figcaption>Crop Top</figcaption>
+			  </figure>
+			  <figure>
+				  <img src="khakis.jpg" width="300" height="300" alt="Khaki Shorts">
+				  <figcaption>Khaki Shorts</figcaption>
+			  </figure>
+			  <figure>
+				<img src="skirt.jpg" width="300" height="300" alt="Skirt">
+				<figcaption>Skirt</figcaption>
+			</figure>
+			<figure>
+				<img src="wooljacket.jpg" width="300" height="300" alt="Wool jacket">
+				<figcaption>Wool Jacket</figcaption>
+			</figure>
+		  </div>
+		  <br><br>
+		  <a href="/order" class="button">Order Now!</a>
+		</div>
 </body>
 
 </html>
