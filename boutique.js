@@ -22,13 +22,13 @@ async function connectToDatabase() {
 
 // Home Page
 app.get('/', (req, res) => {
-    res.render('index'); // Your HTML content for the home page
+    res.render('index'); 
 });
 
-// Catalog Page - Fetch and Display Items
+// Catalog Page 
 app.get('/catalog', async (req, res) => {
     const items = await db.collection('items').find().toArray();
-    res.render('catalog', { itemsTable: generateTable(items) }); // Assuming generateTable() converts items to HTML table
+    res.render('catalog', { itemsTable: generateTable(items) }); 
 });
 
 // Order Form Page
@@ -79,3 +79,18 @@ app.post('/order', (req, res) => {
     });
 });
 
+app.listen(port, () => {
+    console.log(`Server started and running at http://localhost:${port}`);
+    console.log(`Stop to shutdown the server:`);
+});
+
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', (data) => {
+    const input = data.trim().toLowerCase();
+    if (input === 'stop' || input === 'Stop' || input === 'STOP') {
+        client.close().then(() => {
+            console.log('Shutting down the server.');
+            process.exit();
+        });
+    }
+});
