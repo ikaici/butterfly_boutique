@@ -1,0 +1,28 @@
+{
+	"itemsListName": "limited",
+	"itemsList": [{
+			"name": "T-shirt",
+			"cost": 10.75
+		},
+		{
+			"name": "Denim Jeans",
+			"cost": 21.00
+		},
+		{
+			"name": "Crop Top",
+			"cost": 8.00
+		},
+		{
+			"name": "Khaki Shorts",
+			"cost": 100.00
+		},
+		{
+			"name": "Skirt",
+			"cost": 12.00
+		},
+		{
+			"name": "Wool Jacket",
+			"cost": 80.00
+		}
+	]
+}

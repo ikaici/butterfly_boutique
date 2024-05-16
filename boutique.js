@@ -1,35 +1,41 @@
+const fs = require('fs');
 const express = require('express');
 const path = require('path');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const app = express();
-const port = process.argv[2] || 3000;
+const port = 3000;
 const uri = process.env.MONGO_CONNECTION_STRING;
-const databaseAndCollection = { db: "CMSC335_DB", collection: "campApplicants" };
+const databaseAndCollection = { db: "CMSC335_DB", collection: "clothesOrders" };
 
 app.set('view engine', 'ejs');
-app.use(express.static('views'));  
+app.use(express.static('views'));
 app.use(express.urlencoded({ extended: true }));
 
-// Initialize
 const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
+let db;
 
+// Initialize and connect to the database
 async function connectToDatabase() {
-        await client.connect();
-        return client.db(databaseAndCollection.db);
+    await client.connect();
+    db = client.db(databaseAndCollection.db);
 }
+
+(async () => {
+    await connectToDatabase();
+    app.listen(port, () => {
+        console.log(`Server started and running at http://localhost:${port}`);
+    });
+})();
 
 const apiKey = '8d060132a2642887fdc57261ed4248f7';
 const city = 'College Park'; // Example city name
-
-app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
   fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`)
     .then(response => response.json())
     .then(data => {
-        
       const weatherData = {
         temperature: data.main.temp,
         description: data.weather[0].description
@@ -43,67 +49,97 @@ app.get('/', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+class ClothesItem {
+    #cost;
+
+    constructor(name, cost) {
+      this.name = name;
+      this.#cost = cost;
+    }
+
+    getCost() {
+      return this.#cost;
+    }
+
+    getName() {
+      return this.name;
+    }
+}
+
+let itemsMap;
+
+// Validates command line arguments before proceeding
+if (process.argv.length !== 3) {
+    console.error('Usage: node boutique.js <itemsList.json>');
+    process.exit(1);
+}
+
+const jsonFilePath = process.argv[2];
+try {
+    const jsonData = fs.readFileSync(jsonFilePath, 'utf8');
+    const itemsList = JSON.parse(jsonData).itemsList;
+    itemsMap = itemsList.map(item => new ClothesItem(item.name, item.cost));
+} catch (error) {
+    console.error(`Error reading the JSON file: ${error}`);
+    process.exit(1);
+}
+
+app.get('/catalog', (req, res) => {
+    let itemsTable = itemsMap.map(item => 
+        `<tr><td style="border: 2px double black;">${item.getName()}</td>` +
+        `<td style="border: 2px double black;">${item.getCost()}</td></tr>`
+    ).join('');
+    res.render('displayItems.ejs', { itemsTable: `<table>${itemsTable}</table>` });
 });
 
-// Catalog Page 
-app.get('/catalog', async (req, res) => {
-    const items = await db.collection('items').find().toArray();
-    res.render('catalog', { itemsTable: generateTable(items) }); 
-});
-
-// Order Form Page
 app.get('/order', (req, res) => {
-    let options = itemsMap.map(item => `<option value="${item.name}">${item.name}</option>`).join('');
+    let options = itemsMap.map(item => `<option value="${item.getName()}">${item.getName()}</option>`).join('');
     res.render('placeOrder', { items: options });
-  });
-
-// Order Submission Handling
-app.post('/order', async (req, res) => {
-    const orderData = {
-        name: req.body.name,
-        email: req.body.email,
-        delivery: req.body.delivery,
-        itemsSelected: req.body.itemsSelected,
-        orderInformation: req.body.orderInformation
-    };
-    await db.collection('orders').insertOne(orderData);
-    res.redirect('/order-confirmation');
 });
 
 // Order Confirmation Page
-app.post('/order', (req, res) => {
-    // Extract data
+app.post('/order', async (req, res) => {
     let { name, email, delivery, itemsSelected, orderInformation } = req.body;
-
     if (!Array.isArray(itemsSelected)) {
         itemsSelected = [itemsSelected];
     }
-    // generate the order table
     let totalCost = 0;
-    let orderTable = '<table><tr><th style="border: 2px double black;" >Item</th><th style="border: 2px double black;">Cost</th></tr>';
+    let orderTable = '<table><tr><th style="border: 2px double black;">Item</th><th style="border: 2px double black;">Cost</th></tr>';
+    const itemsDetails = [];
 
     itemsSelected.forEach(itemName => {
         let item = itemsMap.find(it => it.name === itemName);
         if (item) {
             totalCost += item.getCost();
-            orderTable += `<tr><td style= "border: 2px double black;">${itemName}</td><td style="border: 2px double black;">${item.getCost()}</td></tr>`;
+            orderTable += `<tr><td style="border: 2px double black;">${itemName}</td><td style="border: 2px double black;">$${item.getCost().toFixed(2)}</td></tr>`;
+            itemsDetails.push({itemName, cost: item.getCost()});
         }
     });
 
-    orderTable += `<tr><td style="border: 2px double black;"><strong>Total Cost:</strong></td><td style="border: 2px double black;">${totalCost.toFixed(2)}</td></tr></table>`;
-    res.render('orderConfirmation', {
-        name: name,
-        email: email,
-        delivery: delivery === 'pickup' ? 'Will pick up' : 'Deliver',
-        orderTable: orderTable
-    });
-});
+    orderTable += `<tr><td style="border: 2px double black;"><strong>Total Cost:</strong></td><td style="border: 2px double black;">$${totalCost.toFixed(2)}</td></tr></table>`;
 
-app.listen(port, () => {
-    console.log(`Server started and running at http://localhost:${port}`);
-    console.log(`Stop to shutdown the server:`);
+    const orderData = {
+        name,
+        email,
+        deliveryMethod: delivery,
+        items: itemsDetails,
+        totalCost,
+        orderInformation,
+        orderDate: new Date()
+    };
+
+    try {
+        const orderResult = await db.collection('clothesOrders').insertOne(orderData);
+        res.render('orderConfirmation', {
+            name,
+            email,
+            delivery: delivery === 'pickup' ? 'Will pick up' : 'Deliver',
+            orderTable
+        });
+    } catch (error) {
+        console.error('Failed to insert order:', error);
+        res.status(500).send("Failed to place order");
+    }
 });
 
 process.stdin.setEncoding('utf8');

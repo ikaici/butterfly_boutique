@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ikaici/cmsc335finalproject#readme",
   "dependencies": {
+    "db": "^6.0.3",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
