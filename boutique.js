@@ -5,7 +5,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const uri = process.env.MONGO_CONNECTION_STRING;
 const databaseAndCollection = { db: "CMSC335_DB", collection: "clothesOrders" };
 
@@ -162,7 +162,7 @@ process.stdin.on('data', (data) => {
     const input = data.trim().toLowerCase();
     if (input === 'stop' || input === 'Stop' || input === 'STOP') {
         client.close().then(() => {
-            console.log('Shutting down the server.');
+            console.log('Shutting down the server!!!');
             process.exit();
         });
     }
