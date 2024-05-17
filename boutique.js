@@ -5,7 +5,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const app = express();
-const PORT= process.env.PORT || 3000;
+const PORT= process.env.PORT || 10000;
 const uri = process.env.MONGO_CONNECTION_STRING;
 const databaseAndCollection = { db: "CMSC335_DB", collection: "clothesOrders" };
 
