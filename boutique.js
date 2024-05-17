@@ -5,7 +5,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const app = express();
-const PORT= process.env.PORT || 10000;
+const port= process.env.PORT || 10000;
 const uri = process.env.MONGO_CONNECTION_STRING;
 const databaseAndCollection = { db: "CMSC335_DB", collection: "clothesOrders" };
 
@@ -24,8 +24,8 @@ async function connectToDatabase() {
 
 (async () => {
     await connectToDatabase();
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`Server started and running at http://localhost:${PORT}`);
+    app.listen(port, () => {
+        console.log(`Server started and running at http://localhost:${port}`);
     });
 })();
 
