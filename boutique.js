@@ -22,11 +22,6 @@ async function connectToDatabase() {
     db = client.db(databaseAndCollection.db);
 }
 
-    app.listen(port, () => {
-        console.log(`Server started and running at http://localhost:${port}`);
-        console.log(`Listening on port: ${port}`);
-
-    });
 
 const apiKey = '8d060132a2642887fdc57261ed4248f7';
 const city = 'College Park'; // Example city name
@@ -154,6 +149,12 @@ app.post('/order', async (req, res) => {
         console.error('Failed to insert order:', error);
         res.status(500).send("Failed to place order");
     }
+});
+
+app.listen(port, () => {
+    console.log(`Server started and running at http://localhost:${port}`);
+    console.log(`Listening on port: ${port}`);
+
 });
 
 process.stdin.setEncoding('utf8');
