@@ -22,12 +22,11 @@ async function connectToDatabase() {
     db = client.db(databaseAndCollection.db);
 }
 
-(async () => {
-    await connectToDatabase();
     app.listen(port, () => {
         console.log(`Server started and running at http://localhost:${port}`);
+        console.log(`Listening on port: ${port}`);
+
     });
-})();
 
 const apiKey = '8d060132a2642887fdc57261ed4248f7';
 const city = 'College Park'; // Example city name
