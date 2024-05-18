@@ -18,9 +18,22 @@ let db;
 
 // Initialize and connect to the database
 async function connectToDatabase() {
-    await client.connect();
-    db = client.db(databaseAndCollection.db);
+  try {
+      await client.connect();
+      db = client.db(databaseAndCollection.db);
+      console.log("Connected to database");
+  } catch (error) {
+      console.error("Failed to connect to database:", error);
+      process.exit(1);
+  }
 }
+
+(async () => {
+  await connectToDatabase();
+  app.listen(port, () => {
+      console.log(`Server started and running at http://localhost:${port}`);
+  });
+})();
 
 
 const apiKey = '8d060132a2642887fdc57261ed4248f7';
@@ -151,11 +164,7 @@ app.post('/order', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server started and running at http://localhost:${port}`);
-    console.log(`Listening on port: ${port}`);
 
-});
 
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', (data) => {
